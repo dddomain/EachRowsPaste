@@ -1,4 +1,3 @@
-Attribute VB_Name = "modEachRowsPaste"
 Option Explicit
 
 Sub EachRowsPaste()
@@ -24,6 +23,7 @@ End If
 'パスと実行するブック名を取得する
 Dim path As String: path = ThisWorkbook.path
 Dim thisBookName As String: thisBookName = ThisWorkbook.Name
+
 Dim prevName As String: prevName = left(thisBookName, InStr(thisBookName, "（"))
 Dim folName As String: folName = Mid(thisBookName, InStr(thisBookName, "）"))
 '回答元様式の拡張子を選ばせる
@@ -35,17 +35,36 @@ Dim extension As String: extension = Application.InputBox _
                     )
 folName = left(folName, InStr(folName, ".")) & extension
 
+
 '式を生成して選択範囲へ代入する
 Dim targetWorkbook As Workbook
 Dim targetBookName As String
+Dim fullPath As String
+Dim uncaughtBooks As Collection: Set uncaughtBooks = New Collection
+
 Dim generatedFormula As String
 
 Dim i As Long
-For i = 1 To selectedRange.Count   
+For i = 1 To selectedRange.Count
     targetBookName = prevName & selectedRange(i).Offset(0, -1).Value & folName
-    Workbooks.Open (path & "/" & targetBookName)
+    fullPath = path & "/" & targetBookName
+    If Dir(fullPath) = "" Then
+        uncaughtBooks.Add targetBookName
+        GoTo continue
+    End If
+    Set targetWorkbook = Workbooks.Open(fullPath)
     generatedFormula = "='[" & targetBookName & "]" & "Sheet1" & "'!" & selectedRange(i).Address(False, False)
     selectedRange(i).Value = generatedFormula
     Workbooks(targetBookName).Close
+continue:
 Next i
+
+If uncaughtBooks.Count > 0 Then
+    Dim alertMessage As String
+    Dim uncaughtBook As Variant
+    For Each uncaughtBook In uncaughtBooks
+        alertMessage = alertMessage & uncaughtBook & vbCrLf
+    Next
+    MsgBox alertMessage & vbCrLf & uncaughtBooks.Count & "件はブックが見つかりませんでした。"
+End If
 End Sub
