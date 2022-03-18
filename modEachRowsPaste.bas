@@ -4,11 +4,11 @@ Sub EachRowsPaste()
 
 Dim selectedRange As Range
 Set selectedRange = Application.InputBox _
-                   　　( _
-                    prompt:="式を挿入する範囲をマウスで選択してください。", _
-                    Title:="対象範囲選択", _
-                    Type:=8 _
-                    )
+     ( _
+    prompt:="式を挿入する範囲をマウスで選択してください。", _
+    Title:="対象範囲選択", _
+    Type:=8 _
+    )
 
 If Err.Number <> 0 Then
     MsgBox "キャンセルされました。"
@@ -24,21 +24,21 @@ Dim thisBookName As String: thisBookName = ThisWorkbook.Name
 Dim prevName As String: prevName = left(thisBookName, InStr(thisBookName, "（"))
 Dim folName As String: folName = Mid(thisBookName, InStr(thisBookName, "）"))
 Dim extension As String: extension = Application.InputBox _
-                    ( _
-                    prompt:="回収した様式の拡張子を選択してください。（例：xlsx）", _
-                    Title:="拡張子選択", _
-                    Default:="xlsx", _
-                    Type:=2 _
-                    )
+    ( _
+    prompt:="回収した様式の拡張子を選択してください。（例：xlsx）", _
+    Title:="拡張子選択", _
+    Default:="xlsx", _
+    Type:=2 _
+    )
 folName = left(folName, InStr(folName, ".")) & extension
 
 Dim sheetName As String: sheetName = Application.InputBox _
-                    ( _
-                    prompt:="回答元ブックのシート名を入力してください。", _
-                    Title:="シート名入力", _
-                    Default:=ActiveSheet.Name, _
-                    Type:=2 _
-                    )
+    ( _
+    prompt:="回答元ブックのシート名を入力してください。", _
+    Title:="シート名入力", _
+    Default:=ActiveSheet.Name, _
+    Type:=2 _
+    )
 
 Dim targetWorkbook As Workbook
 Dim targetBookName As String
